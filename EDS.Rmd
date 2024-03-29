@@ -26,7 +26,7 @@ eqi_2018 <- eqi_2018 %>%
 View(eqi_2018)
 ```
 
-For purposes of this study, we will limit the variables we address to:
+For purposes of this study, we will limit the variables we address from the EQI dataset to:
 
 `pct_unemp` - percent unemployed
 
@@ -38,6 +38,18 @@ For purposes of this study, we will limit the variables we address to:
 
 These variables are specific to just a few key social determinants of health and known carcinogens. 
 
+A [description of the variables](https://schs.dph.ncdhhs.gov/schs/CCR/incidence18/2018-CancerIncidenceandMortalityinNorthCarolinaReport-Final-WEB-v2.pdf) we use from the instance dataset is here:
+
+`county` - 
+
+`cases` - 
+
+`case-rate` - Rates are used to show the risk of an event occurring in a population and the CCR presents rates per 100,000 persons. The CCR calculates rates for both incidence and mortality data. A crude rate is found by dividing the number of events (e.g., cancer cases or deaths) for a population of interest in a specified time period by the population of interest at risk during the same time period. This ratio is then multiplied by 100,000 to express it as a rate per 100,000 persons.
+
+`deaths` - 
+
+`death-rate` - Rates are used to show the risk of an event occurring in a population and the CCR presents rates per 100,000 persons. The CCR calculates rates for both incidence and mortality data. A crude rate is found by dividing the number of events (e.g., cancer cases or deaths) for a population of interest in a specified time period by the population of interest at risk during the same time period. This ratio is then multiplied by 100,000 to express it as a rate per 100,000 persons.
+
 ```{r cleaning}
 eqi_2018 <- eqi_2018 %>%
   select(
@@ -46,12 +58,22 @@ eqi_2018 <- eqi_2018 %>%
     `A_PCBs`,
     `W_PCB`
   )
+
+cancer_2018 <- cancer_2018 %>% 
+  rename(
+    case_rate = Rate...3,
+    death_rate = Rate...5,
+    cases = Cases,
+    deaths = Deaths,
+    county = ...1
+  )
 ```
 
 Which counties saw the highest cancer instance rates in 2018? 
 
 ```{r county-rates}
-View(cancer_2018)
+cancer_2018 %>%
+  arrange(desc(case_rate))
 ```
 
 Which counties had the poorest EQI levels for our selected variables?
