@@ -6,13 +6,164 @@ output: html_document
 ---
 
 ```{r}
-
+library(gbm)
+library(dplyr)
+library(xgboost)
+library(tidyverse)
+library(caret)
 ```
 
 
 ```{r}
 air <- read.csv("Air.csv")
+air <- air[, -1] %>%
+  replace(is.na(.), 0)
+water <- read.csv("Water.csv")
+water <- water[, -1] %>%
+  replace(is.na(.), 0) %>%
+  select(-SEWAGENPDESperKM,	-INDNPDESperKM,	-STORMNPDESperKM)
+land <- read.csv("Land.csv")
+land <- land[, -1] %>%
+  replace(is.na(.), 0)
+built <- read.csv("Built.csv")
+built <- built[, -1] %>%
+  replace(is.na(.), 0)
+sociodemo <- read.csv("Sociodemo.csv")
+sociodemo <- sociodemo[, -1] %>%
+  replace(is.na(.), 0)
 ```
+
+```{r}
+air_quality <- air[, !names(air) %in% c("County", "Instances", "Instance.Rate")]
+
+# Standardize the data
+scaled_data <- scale(air_quality)
+
+# Perform PCA
+pca_result <- princomp(scaled_data)
+
+# Extract the scores of the first principal component
+eqi_scores <- pca_result$scores[,1]
+
+# Normalize the EQI scores to be between 0 and 1
+normalized_eqi <- (eqi_scores - min(eqi_scores)) / (max(eqi_scores) - min(eqi_scores))
+
+# Add EQI scores as a new variable to the air dataset
+air$EQI <- normalized_eqi
+
+# View the first few rows of the updated dataset
+head(air)
+```
+
+```{r}
+water_quality <- water[, !names(water) %in% c("County", "Instances", "Instance.Rate")]
+
+# Standardize the data
+scaled_data <- scale(water_quality) %>%
+  replace(is.na(.), 0)
+
+# Perform PCA
+pca_result <- princomp(scaled_data)
+
+# Extract the scores of the first principal component
+eqi_scores <- pca_result$scores[,1]
+
+# Normalize the EQI scores to be between 0 and 1
+normalized_eqi <- (eqi_scores - min(eqi_scores)) / (max(eqi_scores) - min(eqi_scores))
+
+# Add EQI scores as a new variable to the air dataset
+water$EQI <- normalized_eqi
+
+# View the first few rows of the updated dataset
+head(water)
+```
+
+
+
+
+
+```{r}
+land_quality <- land[, !names(land) %in% c("County", "Instances", "Instance.Rate")]
+
+# Standardize the data
+scaled_data <- scale(land_quality)
+
+# Perform PCA
+pca_result <- princomp(scaled_data)
+
+# Extract the scores of the first principal component
+eqi_scores <- pca_result$scores[,1]
+
+# Normalize the EQI scores to be between 0 and 1
+normalized_eqi <- (eqi_scores - min(eqi_scores)) / (max(eqi_scores) - min(eqi_scores))
+
+# Add EQI scores as a new variable to the air dataset
+land$EQI <- normalized_eqi
+
+# View the first few rows of the updated dataset
+head(land)
+```
+
+```{r}
+built_quality <- built[, !names(built) %in% c("County", "Instances", "Instance.Rate")]
+
+# Standardize the data
+scaled_data <- scale(built_quality)
+
+# Perform PCA
+pca_result <- princomp(scaled_data)
+
+# Extract the scores of the first principal component
+eqi_scores <- pca_result$scores[,1]
+
+# Normalize the EQI scores to be between 0 and 1
+normalized_eqi <- (eqi_scores - min(eqi_scores)) / (max(eqi_scores) - min(eqi_scores))
+
+# Add EQI scores as a new variable to the air dataset
+built$EQI <- normalized_eqi
+
+# View the first few rows of the updated dataset
+head(built)
+```
+
+```{r}
+sociodemo_quality <- sociodemo[, !names(sociodemo) %in% c("County", "Instances", "Instance.Rate")]
+
+# Standardize the data
+scaled_data <- scale(sociodemo_quality)
+
+# Perform PCA
+pca_result <- princomp(scaled_data)
+
+# Extract the scores of the first principal component
+eqi_scores <- pca_result$scores[,1]
+
+# Normalize the EQI scores to be between 0 and 1
+normalized_eqi <- (eqi_scores - min(eqi_scores)) / (max(eqi_scores) - min(eqi_scores))
+
+# Add EQI scores as a new variable to the air dataset
+sociodemo$EQI <- normalized_eqi
+
+# View the first few rows of the updated dataset
+head(sociodemo)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
