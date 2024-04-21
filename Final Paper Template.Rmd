@@ -1,0 +1,457 @@
+---
+title: "Final Paper"
+author: "STOR 320.01 Group 4"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(caret)
+#Put Necessary Libraries Here
+```
+
+# INTRODUCTION
+
+In the quest to mitigate the burden of cancer, exploring innovative avenues within the realm of data analysis is crucial. Two intriguing questions arise from this pursuit. Firstly, is there a specific subdomain within the EQI (Environmental Quality Index) dataset that exhibits a higher propensity for predicting cancer incidence rates? This question holds immense promise for policymakers and researchers as it could potentially streamline efforts towards targeted interventions. By honing in on specific domains, such as air quality or water contamination, stakeholders can devise more focused strategies aimed at reducing cancer instances, thus optimizing resource allocation and maximizing impact.
+
+Secondly, do more hazardous chemicals or variables within the EQI dataset demonstrate a greater capability in predicting cancer incidence rates? Delving into this question not only sheds light on the predictive power of individual variables but also offers insights into societal perceptions of risk. Understanding whether certain chemicals carry a disproportionate influence on cancer rates can inform regulatory priorities and public health campaigns. By discerning whether it is the collective impact of subdomains or the potency of specific chemicals that drives cancer incidence, policymakers can tailor interventions to address the most pressing concerns, potentially leading to more effective prevention and mitigation strategies.
+
+These questions are not only intellectually stimulating but also hold significant practical implications. Answering them could empower stakeholders with actionable insights, guiding policy decisions, resource allocation, and public health initiatives. Moreover, the global relevance of cancer prevention renders these inquiries of paramount importance, as their findings have the potential to benefit populations worldwide. By unraveling the intricate relationship between environmental quality and cancer incidence, this research has the capacity to catalyze positive change, ultimately contributing to improved health outcomes and enhanced quality of life on a global scale.
+
+# DATA
+
+The data set utilized for this analysis draws from two primary sources: the Environmental Protection Agency (EPA) for environmental domain data and the North Carolina Department of Health and Human Services (NCDHHS) Division of Public Health for cancer instance rates. These data sets serve as a robust foundation for investigating the intricate relationship between environmental quality and cancer incidence rates, particularly within the context of North Carolina in the year 2013.
+
+From the EPA, a comprehensive array of data was obtained, covering various domains crucial for assessing environmental quality. The EPA's data set offers insights into critical areas such as air, water, land, built environment, and sociodemographic factors. Within these domains, each variable provides a unique perspective on environmental conditions across the state's counties. 
+
+* Air Domain: This domain provides detailed insights into air quality metrics, focusing on criteria air pollutants and hazardous air pollutants (HAPs). With 84 variables, it offers a comprehensive overview of air quality conditions across North Carolina's counties.
+
+* Water Domain: Within this domain, the data set delves into water quality metrics, covering aspects like general water contamination and chemical contamination. With 79 variables, it offers nuanced insights into the state's water quality landscape, aiding in the assessment of potential health risks associated with water pollution.
+
+* Land Domain: This domain of the data set explores environmental factors related to land quality, including agricultural environment, pesticides, and soil contaminants. With 26 variables, it provides valuable information on land-related factors that may influence public health outcomes.
+
+* Built-Environment Domain: Focusing on the built environment, this domain assesses factors such as traffic-related environment, transit participation, and public housing conditions. With 14 variables, it offers insights into how built environment factors may impact public health and well-being.
+
+* Sociodemographic Domain: This domain evaluates socioeconomic factors and crime rates, offering insights into the societal context that may influence public health outcomes. With 12 variables, it contributes to a holistic understanding of the interplay between environmental and social factors in shaping health disparities.
+
+We then created our own domain, Dangerous Factors, to explore the link between environmental factors and cancer rates in North Carolina, we incorporated variables from each of the five domains. To identify relevant factors, we utilized sources like the NCDEQ for environmental data, the NCDHHS for cancer rates and socioeconomic indicators, and the NCCCR for detailed cancer incidence information. Additionally, we accessed comprehensive data from the EPA, NCI, and NIH, enriching our dataset with insights on air and water quality, chemical exposure, and cancer research findings. This approach allowed us to conduct a thorough analysis of the complex interplay between environmental quality, socioeconomic factors, and cancer rates in North Carolina
+
+Complementing the EPA's rich data set, the NCDHHS Division of Public Health contributes essential information on cancer instance rates for the year 2013. This dataset, sourced from the National Center for Health Statistics, provides crucial data on the prevalence of cancer across North Carolina's counties. With each observation representing a distinct county, the dataset enables a county-level analysis of cancer incidence rates, facilitating localized insights into the impact of environmental factors on public health outcomes.
+
+The dataset comprises a total of 100 observations, corresponding to the number of counties in North Carolina. This ensures comprehensive coverage of the state's geographic diversity, allowing for robust analyses and meaningful comparisons across different regions. By leveraging this rich dataset, researchers and policymakers can gain actionable insights into the specific environmental factors contributing to variations in cancer incidence rates across North Carolina's counties. Ultimately, this empirical evidence can inform targeted interventions and policy decisions aimed at reducing cancer burdens and improving public health outcomes statewide.
+
+# RESULTS
+
+For the initial question regarding the identification of domains within the EQI dataset that have a higher propensity for predicting cancer incidence rates, a systematic approach was employed. Initially, each domain—air, water, land, built environment, and sociodemographic factors—were processed individually to calculate an Environmental Quality Index (EQI) for each county. This EQI served as a composite measure of environmental quality within each domain. By standardizing against all the counties in the United States and weighting the relevant variables within each domain, a normalized EQI was derived. Cross-validation using linear regression models was then conducted for each domains's EQI against cancer incidence rates. The results indicated varying predictive abilities, with air quality exhibiting the lowest root mean square error (RMSE) among the subdomains, suggesting it may have a higher propensity for predicting cancer incidence rates compared to other subdomains.
+
+In addressing the second question regarding the influence of hazardous chemicals or variables within the EQI dataset on cancer incidence rates, additional analysis was conducted. A new dataset containing danger-related variables was introduced and processed similarly to the previous subdomains. The EQI for this danger domain was calculated and integrated with the existing EQIs for air, water, land, built environment, and sociodemographic factors. Cross-validation was then performed using linear regression models to assess the predictive power of each variable, including the newly introduced danger EQI. The results unveiled distinct patterns, with certain chemicals demonstrating stronger predictive capabilities compared to others. Notably, the analysis revealed specific hazardous chemicals such as Cl4C2, Hexane, EtCl, Diesel, and VyCl, which exhibited the lowest RMSE values, indicating a potentially greater influence on cancer incidence rates.
+
+Overall, the methodology involved systematic data processing, normalization, integration, and statistical analysis to uncover insights into the predictive power of different subdomains and variables within the EQI dataset. By employing cross-validation techniques and linear regression models, the study provided robust evidence-based findings rather than relying on subjective opinions. The results not only shed light on which environmental factors may have a higher propensity for predicting cancer but also highlighted specific hazardous chemicals that warrant further attention in regulatory and public health initiatives. This approach offers a data-driven framework for policymakers and researchers to prioritize interventions aimed at reducing cancer incidence rates effectively. 
+
+# CONCLUSION
+
+In our exploration of the intricate relationship between environmental quality and cancer incidence rates, we set out with two pivotal questions in mind. Firstly, we sought to discern which specific subdomains within the Environmental Quality Index (EQI) dataset held a higher potential for predicting cancer incidence rates. Our systematic analysis unveiled that among the various EQI subdomains, air quality exhibited the most robust predictive power, as indicated by its lowest root mean square error (RMSE) compared to other subdomains. This finding suggests that focusing on air quality may offer valuable insights for policymakers and researchers aiming to develop targeted interventions aimed at reducing cancer instances, thereby optimizing resource allocation and maximizing impact.
+
+Secondly, we delved into the realm of hazardous chemicals or variables within the EQI dataset to ascertain their influence on cancer incidence rates. Through rigorous analysis, we identified specific chemicals such as Cl4C2, Hexane, EtCl, Diesel, and VyCl, which demonstrated notable predictive capabilities with low RMSE values. These findings shed light not only on the predictive power of individual variables but also on societal perceptions of risk. Understanding the disproportionate influence of certain chemicals on cancer rates can inform regulatory priorities and public health campaigns, enabling stakeholders to tailor interventions to address the most pressing concerns effectively.
+
+The implications of these conclusions are far-reaching and carry significant real-world relevance. By leveraging these insights, policymakers and public health officials can prioritize interventions and allocate resources more effectively. For instance, targeted efforts to improve air quality or regulate the use of hazardous chemicals could lead to tangible reductions in cancer rates, ultimately enhancing public health outcomes and quality of life. However, while our study provides valuable insights, there are opportunities for further exploration and refinement. Future research could delve deeper into the mechanisms underlying the observed associations and incorporate additional datasets or advanced statistical techniques to enhance predictive accuracy. By continuing to refine methodologies and explore emerging datasets, we can empower stakeholders with the knowledge and tools needed to make informed decisions and drive positive change in the fight against cancer.
+
+
+```{r}
+air <- read.csv("Air.csv")
+air <- air[, -1] %>%
+  replace(is.na(.), 0) %>%
+  mutate(Instances = as.numeric(gsub(",", "", Instances)))
+
+water <- read.csv("Water.csv")
+water <- water[, -1] %>%
+  replace(is.na(.), 0) %>%
+  mutate(Instances = as.numeric(gsub(",", "", Instances)))
+
+land <- read.csv("Land.csv")
+land <- land[, -1] %>%
+  replace(is.na(.), 0) %>%
+  mutate(Instances = as.numeric(gsub(",", "", Instances)))
+
+built <- read.csv("Built.csv")
+built <- built[, -1] %>%
+  replace(is.na(.), 0) %>%
+  mutate(Instances = as.numeric(gsub(",", "", Instances)))
+
+sociodemo <- read.csv("Sociodemo.csv")
+sociodemo <- sociodemo[, -1] %>%
+  replace(is.na(.), 0) %>%
+  mutate(Instances = as.numeric(gsub(",", "", Instances)))
+```
+
+```{r}
+airALL <- read.csv("AirAll.csv")
+airALL <- airALL[, -1] %>%
+  replace(is.na(.), 0)
+
+waterALL <- read.csv("WaterAll.csv")
+waterALL <- waterALL[, -1] %>%
+  replace(is.na(.), 0)
+
+landALL <- read.csv("LandAll.csv")
+landALL <- landALL[, -1] %>%
+  replace(is.na(.), 0)
+
+builtALL <- read.csv("BuiltAll.csv")
+builtALL <- builtALL[, -1] %>%
+  replace(is.na(.), 0)
+
+sociodemoALL <- read.csv("SociodemoAll.csv")
+sociodemoALL <- sociodemoALL[, -1] %>%
+  replace(is.na(.), 0)
+
+# Air 
+air_vars_all <- airALL[, !names(airALL) %in% c("County")]
+
+standardized_air_all <- scale(air_vars_all)
+
+weights <- rep(1/84, 84)
+
+EQI <- rowSums(standardized_air_all * weights)
+
+min_EQI_air_all <- min(EQI)
+max_EQI_air_all <- max(EQI)
+
+# Water
+water_vars_all <- waterALL[, !names(waterALL) %in% c("County")]
+
+standardized_water_all <- scale(water_vars_all)
+
+weights <- rep(1/79, 79)
+
+EQI <- rowSums(standardized_water_all * weights)
+
+min_EQI_water_all <- min(EQI)
+max_EQI_water_all <- max(EQI)
+
+# Land
+land_vars_all <- landALL[, !names(landALL) %in% c("County")]
+
+standardized_land_all <- scale(land_vars_all)
+
+weights <- rep(1/26, 26)
+
+EQI <- rowSums(standardized_land_all * weights)
+
+min_EQI_land_all <- min(EQI)
+max_EQI_land_all <- max(EQI)
+
+# Built
+built_vars_all <- builtALL[, !names(builtALL) %in% c("County")]
+
+standardized_built_all <- scale(built_vars_all)
+
+weights <- rep(1/14, 14)
+
+EQI <- rowSums(standardized_built_all * weights)
+
+min_EQI_built_all <- min(EQI)
+max_EQI_built_all <- max(EQI)
+
+# Sociodemo
+sociodemo_vars_all <- sociodemoALL[, !names(sociodemoALL) %in% c("County")]
+
+standardized_sociodemo_all <- scale(sociodemo_vars_all)
+
+weights <- rep(1/12, 12)
+
+EQI <- rowSums(standardized_sociodemo_all * weights)
+
+min_EQI_sociodemo_all <- min(EQI)
+max_EQI_sociodemo_all <- max(EQI)
+```
+
+#### **Finding the Domain EQIs**
+
+```{r}
+air_vars <- air[, !names(air) %in% c("County", "Instances")]
+
+standardized_air <- scale(air_vars)
+
+weights <- rep(1/84, 84)
+
+EQI <- rowSums(standardized_air * weights)
+
+min_EQI <- min_EQI_air_all
+max_EQI <- max_EQI_air_all
+normalized_EQI <- (EQI - min_EQI) / (max_EQI - min_EQI) 
+
+air$EQI <- normalized_EQI
+
+summary_statistic <- mean(normalized_EQI)
+```
+
+
+```{r}
+water_vars <- water[, !names(water) %in% c("County", "Instances")]
+
+standardized_water <- scale(water_vars) %>%
+  replace(is.na(.), 0)
+
+weights <- rep(1/79, 79)
+
+EQI <- rowSums(standardized_water * weights)
+
+min_EQI <- min_EQI_water_all
+max_EQI <- max_EQI_water_all
+normalized_EQI <- (EQI - min_EQI) / (max_EQI - min_EQI)
+
+water$EQI <- normalized_EQI
+
+summary_statistic <- mean(normalized_EQI)
+```
+
+
+```{r}
+land_vars <- land[, !names(land) %in% c("County", "Instances")]
+
+standardized_land <- scale(land_vars) %>%
+  replace(is.na(.), 0)
+
+weights <- rep(1/26, 26)
+
+EQI <- rowSums(standardized_land * weights)
+
+min_EQI <- min_EQI_land_all
+max_EQI <- max_EQI_land_all
+normalized_EQI <- (EQI - min_EQI) / (max_EQI - min_EQI)
+
+land$EQI <- normalized_EQI
+
+summary_statistic <- mean(normalized_EQI)
+```
+
+
+```{r}
+built_vars <- built[, !names(built) %in% c("County", "Instances")]
+
+standardized_built <- scale(built_vars) %>%
+  replace(is.na(.), 0)
+
+weights <- rep(1/14, 14)
+
+EQI <- rowSums(standardized_built * weights)
+
+min_EQI <- min_EQI_built_all
+max_EQI <- max_EQI_built_all
+normalized_EQI <- (EQI - min_EQI) / (max_EQI - min_EQI)
+
+built$EQI <- normalized_EQI
+
+summary_statistic <- mean(normalized_EQI)
+```
+
+
+```{r}
+sociodemo_vars <- sociodemo[, !names(sociodemo) %in% c("County", "Instances")]
+
+standardized_sociodemo <- scale(sociodemo_vars) %>%
+  replace(is.na(.), 0)
+
+weights <- rep(1/12, 12)
+
+EQI <- rowSums(standardized_sociodemo * weights)
+
+min_EQI <- min_EQI_sociodemo_all
+max_EQI <- max_EQI_sociodemo_all
+normalized_EQI <- (EQI - min_EQI) / (max_EQI - min_EQI)
+
+sociodemo$EQI <- normalized_EQI
+
+summary_statistic <- mean(normalized_EQI)
+```
+
+```{r}
+combined_EQIs <- bind_cols(
+  County = air$County,
+  Air_EQI = air$EQI,
+  Water_EQI = water$EQI,
+  Land_EQI = land$EQI,
+  Built_EQI = built$EQI,
+  Sociodemo_EQI = sociodemo$EQI
+)
+
+combined_EQIs$Instances <- air$Instances
+combined_EQIs
+```
+
+
+
+
+#### **Cross Validating to Answer our Question**
+```{r}
+# Define a function for cross-validation
+cross_validate <- function(data, predictors, response) {
+  # Set up cross-validation
+  ctrl <- trainControl(method = "repeatedcv", 
+                       number = 10, 
+                       repeats = 3)
+  
+  # Perform cross-validation for each predictor
+  results <- lapply(predictors, function(predictor) {
+    formula <- as.formula(paste(response, "~", predictor))
+    model <- train(formula, 
+                   data = data, 
+                   method = "lm",
+                   trControl = ctrl)
+    return(c(predictor, model$results$RMSE))
+  })
+  
+  # Combine results into a dataframe
+  results_df <- do.call(rbind, results)
+  colnames(results_df) <- c("Predictor", "RMSE")
+  
+  return(results_df)
+}
+
+# Define predictors and response variable
+predictors <- c("Air_EQI", "Water_EQI", "Land_EQI", "Built_EQI", "Sociodemo_EQI")
+response <- "Instances" 
+
+# Perform cross-validation
+cv_results <- cross_validate(combined_EQIs, predictors, response)
+
+# Print cross-validation results
+print(cv_results)
+```
+
+#### **Adding a Danger to the Mix and Cross Validating**
+
+```{r}
+dangerALL <- read.csv("DangerAll.csv")
+dangerALL <- dangerALL[, -1] %>%
+  replace(is.na(.), 0)
+
+danger <- read.csv("Danger.csv")
+danger <- danger[, -1] %>%
+  replace(is.na(.), 0) %>%
+  mutate(Instances = as.numeric(gsub(",", "", Instances)))
+
+# Danger
+danger_vars_all <- dangerALL[, !names(dangerALL) %in% c("County")]
+
+standardized_danger_all <- scale(danger_vars_all)
+
+weights <- rep(1/41, 41)
+
+EQI <- rowSums(standardized_danger_all * weights)
+
+min_EQI_danger_all <- min(EQI)
+max_EQI_danger_all <- max(EQI)
+
+# Finding EQIs of NC Counties
+danger_vars <- danger[, !names(danger) %in% c("County", "Instances", "Instance.Rate")]
+
+standardized_danger <- scale(danger_vars) %>%
+  replace(is.na(.), 0)
+
+weights <- rep(1/41, 41)
+
+EQI <- rowSums(standardized_danger * weights)
+
+min_EQI <- min_EQI_danger_all
+max_EQI <- max_EQI_danger_all
+normalized_EQI <- (EQI - min_EQI) / (max_EQI - min_EQI)
+
+danger$EQI <- normalized_EQI
+
+danger <- danger %>%
+  select(County, EQI, Instances)
+
+summary_statistic <- mean(normalized_EQI)
+```
+
+```{r}
+combined_EQIs_with_danger <- bind_cols(
+  County = air$County,
+  Air_EQI = air$EQI,
+  Water_EQI = water$EQI,
+  Land_EQI = land$EQI,
+  Built_EQI = built$EQI,
+  Sociodemo_EQI = sociodemo$EQI, 
+  Danger_EQI = danger$EQI
+)
+
+combined_EQIs_with_danger$Instances <- air$Instances
+combined_EQIs_with_danger
+```
+
+```{r}
+# Define predictors and response variable
+predictors <- c("Air_EQI", "Water_EQI", "Land_EQI", "Built_EQI", "Sociodemo_EQI", "Danger_EQI")
+response <- "Instances"  # Assuming "Instances" is the cancer incidence rate
+
+# Perform cross-validation
+cv_results <- cross_validate(combined_EQIs_with_danger, predictors, response)
+
+# Print cross-validation results
+print(cv_results)
+```
+
+```{r}
+# Define a function for cross-validation for air domain variables
+cross_validate_air <- function(data, air_predictors, response) {
+  # Subset the data to include only air domain variables and the response variable
+  air_data <- data[, c(air_predictors, response)]
+  
+  # Set up cross-validation
+  ctrl <- trainControl(method = "repeatedcv", 
+                       number = 10, 
+                       repeats = 3)
+  
+  # Perform cross-validation for each air predictor
+  results <- lapply(air_predictors, function(predictor) {
+    formula <- as.formula(paste(response, "~", predictor))
+    model <- train(formula, 
+                   data = air_data, 
+                   method = "lm",
+                   trControl = ctrl)
+    return(c(predictor, model$results$RMSE))
+  })
+  
+  # Combine results into a dataframe
+  results_df <- do.call(rbind, results)
+  colnames(results_df) <- c("Predictor", "RMSE")
+  
+  return(results_df)
+}
+
+# Define air domain predictors and response variable
+air_predictors <- names(air)[2:85]
+
+response <- "Instances"  
+
+# Perform cross-validation for air domain predictors
+cv_results_air <- cross_validate_air(air, air_predictors, response)
+
+# Convert cv_results_air to a dataframe if it's not already
+cv_results_air <- as.data.frame(cv_results_air)
+
+# Sort the cross-validation results by RMSE in ascending order
+sorted_results <- cv_results_air[order(cv_results_air$RMSE), ]
+
+# Select the lowest 5 RMSE values
+lowest_5 <- head(sorted_results, 5)
+
+# Print the lowest 5 RMSE values
+print(lowest_5)
+```
+
+
+
+
+
+
+
+
+
+
+
+
