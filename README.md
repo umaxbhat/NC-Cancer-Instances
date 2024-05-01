@@ -11,4 +11,5 @@ Our paper centers on another conceivable suspect for higher cancer instance rate
 Specifically, our group aims to predict cancer instance rates in each North Carolina county based on that county’s environmental quality indicators. We seek to understand which compounds and environmental variables play the greatest role in determining cancer instance rates in the state, and which environmental subdomains most influence counties’ cancer instance rate projections. The answers to these questions may hold significant practical applications because they can offer stakeholders actionable insights, guide policy decisions, steer resource allocation and shape public health initiatives.
 
 Question 1: Is there a specific domain within the EQI (Environmental Quality Index) dataset that exhibits a higher propensity for predicting cancer incidence rates?
+
 Question 2: What are the most reliable indicators for identifying counties with the highest incidence rates of cancer? Conversely, what factors are indicative of counties with the lowest rates of cancer?
