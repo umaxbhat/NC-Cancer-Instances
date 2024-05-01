@@ -228,22 +228,24 @@ combined_EQIs$Instances <- air$Instances
 combined_EQIs$Instance_Rate <- air$Instance_Rate
 ```
 
-
 # INTRODUCTION
 
-In the realm of cancer research, the fusion of data analysis and environmental science unveils a landscape ripe with possibilities for innovation and discovery. As we embark on this journey, two compelling questions emerge, each poised to unravel critical insights that could revolutionize cancer prevention strategies and public health initiatives.
+In February, the World Health Organization published a [sobering forecast](https://www.who.int/news/item/01-02-2024-global-cancer-burden-growing--amidst-mounting-need-for-services): “Over 35 million new cancer cases are predicted in 2050, a 77% increase from the estimated 20 million in 2022.” The WHO’s estimate comes amidst a flurry of news reports about an [increase in the number of young people diagnosed with cancer](https://health.ucdavis.edu/blog/cultivating-health/cancer-is-on-the-rise-in-younger-adults-what-to-know-about-screening-and-your-risk/2024/04). In March, The New York Times reported that “millennials born around 1990 now have twice the risk of colon cancer compared with people born around the 1950s, while millennials’ risk for rectal cancer is about four times higher than that of older age groups, according to a study published in the [Journal of the National Cancer Institute](https://academic.oup.com/jnci/article/109/8/djw322/3053481).”
 
-The first question delves into the nuanced interplay between environmental quality domains and cancer incidence rates. Specifically, we aim to discern whether certain domains within the Environmental Quality Index (EQI) dataset exhibit a heightened propensity for predicting cancer incidence. This inquiry transcends mere academic curiosity, offering tangible benefits for policymakers and researchers alike. By pinpointing domains with significant predictive power, stakeholders can tailor interventions to target specific environmental factors, optimizing resource allocation and amplifying the efficacy of public health campaigns. Moreover, unraveling the intricate relationship between environmental quality domains and cancer incidence holds the potential to unearth novel insights into the etiology of cancer, paving the way for more nuanced prevention strategies and interventions.
+Researchers have identified associations between certain activities, lifestyles and diets — such as smoking, eating red meat and consuming processed foods — with cancer risk. But these factors alone might not explain the full picture, per [a recent quote](https://www.nature.com/articles/d41586-024-00720-6) by a National University of Singapore hepatologist: “Many have hypothesized that things like obesity and alcohol consumption might explain some of our findings — but it looks like you need a deeper dive into the data.”.
 
-The second question ventures into the realm of chemical hazards and their impact on cancer incidence rates. Here, our aim is to discern whether certain hazardous chemicals or variables within the EQI dataset wield a disproportionate influence on cancer rates. Beyond the realms of academia, this question resonates deeply with policymakers, regulatory agencies, and public health advocates. By identifying chemicals with significant predictive power, stakeholders can prioritize regulatory efforts, implement targeted monitoring programs, and devise evidence-based interventions aimed at reducing exposure and mitigating risk. Furthermore, understanding the differential impact of various chemicals on cancer incidence not only informs regulatory priorities but also shapes public perceptions of risk, driving advocacy efforts and fostering community engagement in environmental health issues.
+Our paper centers on another conceivable suspect for higher cancer instance rates in younger populations: deteriorating environmental conditions. The [prevalence of microplastics](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10340669/) in the environment has been studied as a potential “driver” for the early onset of colorectal cancer; so too have different [air pollutants](https://www.aacr.org/patients-caregivers/progress-against-cancer/air-pollution-associated-cancer/) and [water pollutants](https://www.health.state.mn.us/communities/environment/hazardous/topics/cancerenvt.html). The threat of climate change compounds these concerns. 
 
-The relevance of these questions extends far beyond the confines of academic inquiry. By unraveling the complex interplay between environmental quality, chemical exposures, and cancer incidence, this research has the potential to catalyze transformative change on a global scale. From guiding policy decisions to empowering communities with actionable insights, the findings gleaned from these investigations hold the key to unlocking a future where cancer incidence is mitigated, and public health is safeguarded. As we embark on this quest for knowledge, the promise of innovative solutions and tangible impact beckons, inviting stakeholders from diverse backgrounds to join hands in the pursuit of a healthier, more sustainable future.
+Specifically, our group aims to predict cancer instance rates in each North Carolina county based on that county’s environmental quality indicators. We seek to understand which compounds and environmental variables play the greatest role in determining cancer instance rates in the state, and which environmental subdomains most influence counties’ cancer instance rate projections. The answers to these questions may hold significant practical applications because they can offer stakeholders actionable insights, guide policy decisions, steer resource allocation and shape public health initiatives.
+
+* Question 1: Is there a specific domain within the EQI (Environmental Quality Index) dataset that exhibits a higher propensity for predicting cancer incidence rates?
+* Question 2: What are the most reliable indicators for identifying counties with the highest incidence rates of cancer? Conversely, what factors are indicative of counties with the lowest rates of cancer?
 
 # DATA
 
-The data utilized in this analysis derives its depth from two primary sources: the Environmental Protection Agency (EPA) and the North Carolina Department of Health and Human Services (NCDHHS) Division of Public Health. These datasets provide a robust foundation for exploring the intricate relationship between environmental quality and cancer incidence rates within the context of North Carolina during the year 2013.
+We analyzed data from the North Carolina Department of Health and Human Services’ [NC State Center for Health Statistics](https://schs.dph.ncdhhs.gov/data/cancer.cfm) to identify patterns in cancer instance rates and predict future instance rates based on the corresponding environmental quality indicators (EQI) for each North Carolina county. EQI data is sourced from the [Environmental Protection Agency](https://www.epa.gov/healthresearch/environmental-quality-index-eqi). All datasets utilized in this project are relevant to the year 2013.
 
-From the Environmental Protection Agency, a comprehensive array of data was obtained, spanning various domains critical for assessing environmental quality. These domains encompass a wide range of factors that collectively contribute to shaping the environmental landscape of North Carolina's counties. For instance, the air domain offers insights into criteria air pollutants and hazardous air pollutants (HAPs), shedding light on the quality of the air breathed by residents. Similarly, the water domain delves into metrics related to general water contamination and chemical contamination, providing crucial information on the safety of water sources. Moreover, the land domain explores factors such as agricultural environment, pesticides, and soil contaminants, offering insights into the health risks associated with land use practices. Complementing these domains, the built-environment domain assesses the impact of factors like traffic-related environment and public housing conditions on public health outcomes, while the sociodemographic domain evaluates socioeconomic factors and crime rates, illuminating the broader societal context in which environmental health disparities exist.
+The primary dataset we use in this analysis is titled “County-level cumulative environmental quality associated with cancer incidence.” This dataset, sourced from the EPA, offers a comprehensive array of data points used to assess environmental quality. It holds more than 3000 observations that each detail a county in the United States; we created a subset that focuses on just the 100 counties in North Carolina. Data is collected on five critical areas: We split the original data into subdomain subsets — an `air` subset, a `water` subset, a `land` subset, a `built` subset (for built environment), and a `sociodemo` subset (for sociodemographic factors). Subdomains serve as a way to group individually recorded levels of various chemicals, carcinogens, and pollutants in the environment based on which part of the environment those compounds are found in. It is important to keep in mind that certain compounds can be far more dangerous than others even in smaller quantities. We will address how we accounted for this later in this paper.
 
 | Domain             | Variables                   | Description                                      |
 |--------------------|-----------------------------|--------------------------------------------------|
@@ -258,9 +260,7 @@ From the Environmental Protection Agency, a comprehensive array of data was obta
 | Sociodemographic   | Socioeconomic Factors       | Indicators of socioeconomic status and disparities |
 |                    | Crime Rates                 | Rates of crime within communities               |
 
-In addition to the EPA data, the NCDHHS Division of Public Health contributes crucial information on cancer instance rates across North Carolina's counties. This dataset, sourced from the National Center for Health Statistics, provides invaluable insights into the prevalence and distribution of cancer within the state. With each observation representing a distinct county, this dataset enables a granular analysis of cancer incidence rates, allowing researchers to explore geographical variations and identify potential hotspots for targeted interventions.
-
-The dataset comprises 100 observations, corresponding to the number of counties in North Carolina. This comprehensive coverage ensures that the analysis captures the full geographic diversity of the state, facilitating robust comparisons and meaningful insights into the factors influencing cancer incidence rates across different regions. By leveraging this rich dataset, researchers and policymakers can gain actionable insights into the specific environmental factors driving variations in cancer incidence rates, paving the way for evidence-based interventions and policy decisions aimed at reducing the burden of cancer and improving public health outcomes statewide.
+We joined the NCDHHS cancer instance rate dataset to the EQI dataset to create our final data frame for analysis. The NCDHHS dataset comprises 100 observations, matching the number of counties in North Carolina. The cancer instance rate for each county is “the number of cancer cases (or deaths) divided by the number of people in the state and are usually expressed as the number of cases (or deaths) per 100,000 people,” per the NC State Center for Health Statistics website. By honing in on county-level insights, our group believes we can help researchers and policymakers on the state level tailor their approaches based on countywide discrepancies and help local-level governments take relevant action. Also, it is important to note that North Carolina’s public health infrastructure is largely decentralized, and therefore many public health decisions might be left up to local governments.
 
 ```{r, echo=F, message=FALSE, warning=FALSE, fig.align='center', fig.height=3}
 nc_counties <- st_read("/Users/trentonmills18/Desktop/STOR 320/Final Project/nc_counties", quiet=TRUE)
@@ -268,7 +268,7 @@ merged_data <- merge(nc_counties, combined_EQIs, by = "County")
 
 ggplot() +
   geom_sf(data = merged_data, aes(fill = Instance_Rate), color = NA) + 
-  scale_fill_gradient(low = "lightblue", high = "darkblue", name = "Instance Rate", limits = c(225, 650)) +
+  scale_fill_gradient(low = "#8ff9ff", high = "#083c40", name = "Instance Rate", limits = c(225, 650)) +
   labs(title = "Cancer Instance Rates in North Carolina", 
        caption = "Rates are per 100,000") +
   theme_minimal() +
@@ -278,22 +278,11 @@ ggplot() +
         panel.grid = element_blank())
 ```
 
-This detailed description of the data used underscores the richness and complexity of the datasets sourced from the EPA and NCDHHS Division of Public Health. Through the exploration of environmental quality domains and cancer incidence rates, this analysis aims to unravel actionable insights to inform targeted interventions and policy decisions, ultimately contributing to improved public health outcomes and the mitigation of cancer burdens across North Carolina.
+This figure offers preliminary insights into which counties observe the highest cancer instance rates. Scotland County, Swain County and Martin County immediately stand out. However, we do not have a clear understanding of why this is the case given the three counties are in vastly different parts of the state — though Scotland and Swain counties have been noted to have some of the [worst health outcomes in North Carolina](https://www.northcarolinahealthnews.org/2022/06/01/in-columbus-county-the-health-director-is-upfront-about-its-low-ranking/), per the County Health Rankings & Roadmaps, according to NC Health News.
+
+There are not many news articles that refer to cancer instance rates. One piece that discussed the presence of high cancer death rate “hotspots” in the state noted that as of 2016, researchers at UNC-Chapel Hill did not fully understand why such “hotspots” existed, according to [reporting by NC Health News](https://www.northcarolinahealthnews.org/2016/08/09/high-death-rates-in-cancer-hotspots-across-nc/). One of the study’s authors noted, though, that “it wasn’t a simple relationship with race or income level, education level and things like that,” and poor outcomes could perhaps be attributed to local health structures.
 
 # RESULTS
-
-### Q1: Identifying Domains with Predictive Power for Cancer Incidence Rates
-
-To address the first question regarding the identification of domains within the EQI dataset that have a higher propensity for predicting cancer incidence rates, a systematic approach was undertaken. Initially, each domain—air, water, land, built environment, and sociodemographic factors—was processed individually to calculate an Environmental Quality Index (EQI) for each county. This EQI served as a composite measure of environmental quality within each domain. By standardizing against all the counties in the United States and weighting the relevant variables within each domain, a normalized EQI was derived.
-
-```{r, echo=F}
-combined_EQIs <- combined_EQIs[1:10, c(1,2,3,4,5,6,8)]
-
-html_table <- knitr::kable(combined_EQIs, "html") %>%
-  kableExtra::kable_styling()
-
-html_table
-```
 
 ```{r, echo=F, result=F, fig.width=10, fig.height=4, fig.align='center'}
 common_limits <- range(c(merged_data$Air_EQI, 
@@ -305,7 +294,7 @@ common_limits <- range(c(merged_data$Air_EQI,
 # Combine plots into a single image
 combined_plot <- ggplot() +
   geom_sf(data = merged_data, aes(fill = Air_EQI), color = NA) + 
-  scale_fill_gradient(low = "lightblue", high = "darkblue", name = "Air EQI", limits = common_limits) +
+  scale_fill_gradient(low = "#8ff9ff", high = "#083c40", name = "EQI Level", limits = common_limits) +
   labs(title = "Air EQI") +
   theme_minimal() +
   theme(axis.text = element_blank(),
@@ -315,7 +304,7 @@ combined_plot <- ggplot() +
 
   ggplot() +
   geom_sf(data = merged_data, aes(fill = Water_EQI), color = NA) + 
-  scale_fill_gradient(low = "lightblue", high = "darkblue", name = "Air EQI", limits = common_limits) +
+  scale_fill_gradient(low = "#8ff9ff", high = "#083c40", name = "EQI Level", limits = common_limits) +
   labs(title = "Water EQI") +
   theme_minimal() +
   theme(axis.text = element_blank(),
@@ -326,7 +315,7 @@ combined_plot <- ggplot() +
   
   ggplot() +
   geom_sf(data = merged_data, aes(fill = Land_EQI), color = NA) + 
-  scale_fill_gradient(low = "lightblue", high = "darkblue", name = "Air EQI", limits = common_limits) +
+  scale_fill_gradient(low = "#8ff9ff", high = "#083c40", name = "EQI Level", limits = common_limits) +
   labs(title = "Land EQI") +
   theme_minimal() +
   theme(axis.text = element_blank(),
@@ -336,7 +325,7 @@ combined_plot <- ggplot() +
 
   ggplot() +
   geom_sf(data = merged_data, aes(fill = Built_EQI), color = NA) + 
-  scale_fill_gradient(low = "lightblue", high = "darkblue", name = "Air EQI", limits = common_limits) +
+  scale_fill_gradient(low = "#8ff9ff", high = "#083c40", name = "EQI Level", limits = common_limits) +
   labs(title = "Built EQI") +
   theme_minimal() +
   theme(axis.text = element_blank(),
@@ -346,7 +335,7 @@ combined_plot <- ggplot() +
 
   ggplot() +
   geom_sf(data = merged_data, aes(fill = Sociodemo_EQI), color = NA) + 
-  scale_fill_gradient(low = "lightblue", high = "darkblue", name = "Air EQI", limits = common_limits) +
+  scale_fill_gradient(low = "#8ff9ff", high = "#083c40", name = "EQI Level", limits = common_limits) +
   labs(title = "Sociodemo EQI") +
   theme_minimal() +
   theme(axis.text = element_blank(),
@@ -360,7 +349,20 @@ combined_plot +
   plot_layout(guides = 'collect')
 ```
 
-Cross-validation using linear regression models was then conducted for each domain's EQI against cancer incidence rates. The Root Mean Square Error (RMSE) and Mean Absolute Error (MAE) were chosen as evaluation metrics to assess the predictive performance of environmental domains in predicting cancer incidence rates. RMSE quantifies the average magnitude of errors between predicted and actual values while considering the squared differences, making it sensitive to outliers. MAE, on the other hand, measures the average magnitude of errors without considering their direction, providing a straightforward interpretation of prediction accuracy. By using both metrics in cross-validation with 25 folds and 10 repeats, the analysis aims to provide a robust evaluation of the models' accuracy and precision. This approach ensures thorough validation and reduces bias, leading to more reliable insights into the predictive power of environmental domains in assessing cancer risk.
+To find which subdomains in the EQI dataset had a higher propensity for predicting cancer instance rates, we created a standardized “score” for each subdomain. The score was calculated by separating the data frame into subsets based on environmental subdomain, scaling these compounds, weighting each compound in each subset equally, and summing the weighted values (*weight* * *scaled value*). We chose to weigh each compound in the subsets equally because we are not healthcare or environmental experts, and therefore cannot assess whether one compound is more potent or dangerous than others. There was also simply too much data to analyze – it wasn’t feasible to research each compound. Also, we standardized the factors in each domain using the `scale()` function, by centering the factors around zero and scaling them to have a standard deviation of one we wereable to deal with the varying levels of measurements, ensuring comparability between variables of different scales and units for robust statistical analysis. Lastly, we standardized the EQI values across all counties in the US to prevent skewing our data. This approach allows us to grasp the EQI levels for NC in comparison to the entire US. If we only normalized NC, we would observe values gravitating towards either extremely safe or hazardous EQI levels.
+
+```{r, echo=F}
+combined_EQIs <- combined_EQIs[1:10, c(1,2,3,4,5,6,8)]
+
+html_table <- knitr::kable(combined_EQIs, "html") %>%
+  kableExtra::kable_styling()
+
+html_table
+```
+
+### Q1: Identifying Domains with Predictive Power for Cancer Incidence Rates
+
+In our initial question, we used cross-validation using linear regression models for each subdomain’s EQI score against cancer instance rates for each county. The Root Mean Square Error (RMSE) and Mean Absolute Error (MAE) were chosen as evaluation metrics to assess the predictive performance of environmental domains to estimate cancer instance rates. RMSE quantifies the average magnitude of errors between predicted and actual values while considering the squared differences, making it sensitive to outliers. MAE measures the average magnitude of errors without considering their direction, providing a straightforward interpretation of prediction accuracy. By using both metrics in cross-validation with 25 folds and 10 repeats, the analysis aims to provide a robust evaluation of the models’ accuracy and precision. This approach ensures thorough validation and reduces bias, leading to more reliable insights into the predictive power of environmental domains in assessing cancer risk.
 
 ```{r, echo=F, fig.align='center'}
 # Create a data frame for RMSE and MAE
@@ -380,21 +382,179 @@ ggplot(results_melted, aes(x = Domain, y = value, fill = variable)) +
             position = position_dodge(width = 0.9), 
             vjust = -0.5, 
             size = 3) +  # Add text labels above the bars
-  labs(title = "RMSE and MAE for Each Domain",
+  labs(title = "RMSE and MAE for Each Domain of EQI",
        x = "Domain",
        y = "Value",
        fill = "Metric") +
+  scale_fill_manual(values = c("RMSE" = "#a7bed3", "MAE" = "#ffa652")) +
   theme_minimal() +
-  theme(legend.position = "top")
+  theme(legend.position = "top", 
+        plot.title = element_text(hjust = 0.5))
 ```
 
+The results of the cross-validation process revealed varying predictive abilities among the different environmental domains. Air quality exhibited the lowest RMSE among the subdomains, suggesting it may have a higher propensity for predicting cancer incidence rates. This finding indicates that air quality metrics such as criteria air pollutants and hazardous air pollutants (HAPs) could serve as valuable indicators for assessing cancer risk at the state level. 
+
+The cross-validation results further underscored the importance of considering multiple environmental domains when predicting cancer incidence rates. While air quality emerged as a significant predictor, other domains such as water, land, built environment, and sociodemographic factors also demonstrated predictive power, albeit to varying degrees. This highlights the complex interplay between environmental factors and cancer incidence – something that must be accounted for in similar analyses.
+
+### Q2: Best Predictors for the Counties with the Highest and Lowest Cancer Instance Rates
+
+To answer our second question, we created a combined dataset comprised of all the scaled and merged subsets from Q1, because for this question we are looking at all 215 individual predictors and not grouped subdomains. We split the combined dataset into two groups: the 10 counties with the highest instance rates and the 10 counties with the lowest instance rates. We opted for a top 10 and bottom test based on visual inspection. We reasoned that if the characteristics of the top and bottom groups were too similar, there would likely be significant overlap in predictors, which we aimed to minimize. Thus, we selected the top 10 percentile and bottom 10 percentile for our analysis.
+
+:::::::::::::: {.columns}
+::: {.column width="50%"}
+
+<center>**The Top 10 Counties:**</center>
+
+| Rank | County      |
+|------|-------------|
+| 1    | Scotland    |
+| 2    | Chowan      |
+| 3    | Swain       |
+| 4    | Rockingham  |
+| 5    | Pamlico     |
+| 6    | Davie       |
+| 7    | Alamance    |
+| 8    | Moore       |
+| 9    | Rowan       |
+| 10   | Cleveland   |
+
+:::
+::: {.column width="50%"}
+
+<center>**The Bottom 10 Counties:**</center>
+
+| Rank | County      |
+|------|-------------|
+|1     |  Hyde       |
+| 2    | Graham      |
+| 3    | Gates       |
+| 4    | Hertford    |
+| 5    | Polk        |
+| 6    | Bladen      |
+| 7    | Tyrrell     |
+| 8    | Brunswick   |
+| 9    | Alleghany   |
+| 10   | Yancey      |
+ 
+:::
+::::::::::::::
+
+Next, we used cross-validation, using MAE as our evaluation metric, to discern the top 15 environmental predictors. 
+We chose to use MAE over RMSE because MAE is robust to outliers – real-world datasets no doubt contain standouts. Thus, MAE provides a more resilient measure of model performance by capturing the absolute differences between predicted and observed values without squaring them. By prioritizing MAE, we aim to yield more reliable and interpretable results, enhancing the validity and suitability of our findings.
+
+We used a 10-fold cross-validation strategy to balance comprehensive model assessment and computational efficiency. 10-fold cross-validation enables robust estimation of model performance while maximizing the utilization of available data. By dividing the dataset into ten equally sized subsets and interactively training the model on nine subsets while validating on the remaining subset, 10-fold cross-validation enables robust estimation of model performance while maximizing the utilization of available data. Additionally, incorporating three repeats of the cross-validation process enhances the robustness of the findings by mitigating the potential variability introduced by random partitioning of the data. This iterative approach to cross-validation ensures that the identified predictors demonstrate consistent performance across multiple iterations, enhancing the reliability and applicability of the results.  
+
+#### **Best Predictors for the Top 10 Counties based on Instance Rate**
+
+```{r, echo=F}
+predictors <- c("pct_pers_lt_pov", "HCBD", "med_hh_inc", "SEWAGENPDESperKM", "Air_11DCE", 
+                "EtCl", "Air_CN", "ALPHA", "2NP", "MIBK", "PNP", "TI", "Toluene", "P", "CS2")
+mae <- c(15.684634249861, 17.0436074993602, 17.1499063795234, 18.0407108537014, 18.6878408132127, 
+         18.8176393565454, 18.9342222851143, 19.0150409692574, 19.1371494613242, 19.243074152445, 
+         19.4066964969797, 19.5166666666666, 19.7410452171381, 19.7548447335644, 19.7695345978224)
+definitions <- c("Percent persons less than poverty level",
+"Hexachlorobutadiene in the air",
+"Median household income",
+"Sewage Permits per 1000 km of Stream in County", 
+"Vinylidene chloride in the air", 
+"Ethyl chloride in the air", 
+"Cyanide compounds in the air", 
+"cis-1,2-Dichloroethylene in the water", 
+ "2-nitropropane", 
+"Methyl isobutyl ketone in the air", 
+"4-nitrophenol in the air", 
+"Thallium in the water", 
+"Toluene in the air", 
+"Phosphorus in the air", 
+ "Carbon disulfide in the air"
+)
+data_table <- data.frame("Predictors" = predictors, "MAE" =  mae, "Definition" = definitions)
+
+html_table <- knitr::kable(data_table, "html") %>%
+  kableExtra::kable_styling()
+
+html_table
+```
+
+The analysis of the 10 counties with the highest instance rates unveiled several predictors with notably lower MAE values, indicative of their heightened predictive power compared to the 10 counties with the lowest instance rates. Variables such as the percentage of persons living below the poverty line (`pct_pers_lt_pov`), median household income (`med_hh_inc`), and various air quality indicators (e.g., `Air_11DCE`, `Air_CN`) emerged as prominent predictors in this group. These findings underscore the significant association between socioeconomic factors and environmental quality with higher cancer incidence rates in specific counties.
+
+#### **Best Predictors for the Bottom 10 Counties based on Instance Rate**
+
+```{r, echo=F}
+predictors <- c("Air_DEHP", "pct_no_eng", "Chloroprene", "MeCl", "Toluene", 
+                  "XYLENES", "farms_per_acres", "ECH", "Isophorone", "PCBs", 
+                  "DMF", "Air_11DCE", "Air_HCCPD", "PAHPOM", "HCBD")
+mae <- c(25.4132818933316, 28.664537463118, 28.9938135869667, 29.2229366928258, 29.759018512123, 
+           30.0386955739042, 30.6399653328095, 30.673119002865, 30.8966781620078, 30.9417076913918, 
+           31.3818275369516, 31.6511799337968, 31.9194382285677, 31.9204956710105, 32.0058600404978)
+definitions <- c("Bis-2-ethylhexyl phthalate in the air",
+"Percent no English", 
+"Chloroprene in the air", 
+ "Methyl chloride in the air", 
+"Toluene in the air", 
+"Xylenes in the water", 
+"Farms per acre", 
+"Epichlorohydrin in the air", 
+"Isophorone in the air", 
+"Polychlorinated biphenyls in the air", 
+"Dimethyl formamide in the air", 
+"Vinylidene chloride in the air", 
+"Hexachlorocyclopentadiene in the air", 
+"PAH/POM in the air", 
+"Hexachlorobutadiene in the air"
+)
+data_2_table <- data.frame("Predictors" = predictors, "MAE" =  mae, "Definition" = definitions)
+
+html_table <- knitr::kable(data_2_table, "html") %>%
+  kableExtra::kable_styling()
+
+html_table
+```
+
+For the 10 counties with the lowest instance rates, the MAE values for the identified predictors were comparatively higher. However, variables such as air pollutants (e.g., `Air_DEHP`, `Air_HCCPD`), socio-economic indicators (e.g., `pct_no_eng`), and industrial chemicals (e.g., `Chloroprene`, `MeCl`) still exhibited substantial predictive power. Despite the relatively higher MAE values, these predictors provide valuable insights into the factors influencing cancer incidence rates in regions with lower instance rates.
+
+```{r, echo=F, fig.align='center', fig.width=12}
+predictors <- c("pct_pers_lt_pov", "HCBD", "med_hh_inc", "SEWAGENPDESperKM", "Air_11DCE", 
+                "EtCl", "Air_CN", "ALPHA", "2NP", "MIBK", "PNP", "TI", "Toluene", "P", "CS2")
+mae <- c(15.684634249861, 17.0436074993602, 17.1499063795234, 18.0407108537014, 18.6878408132127, 
+         18.8176393565454, 18.9342222851143, 19.0150409692574, 19.1371494613242, 19.243074152445, 
+         19.4066964969797, 19.5166666666666, 19.7410452171381, 19.7548447335644, 19.7695345978224)
+data <- data.frame(predictors, mae)
+
+predictors <- c("Air_DEHP", "pct_no_eng", "Chloroprene", "MeCl", "Toluene", 
+                  "XYLENES", "farms_per_acres", "ECH", "Isophorone", "PCBs", 
+                  "DMF", "Air_11DCE", "Air_HCCPD", "PAHPOM", "HCBD")
+mae <- c(25.4132818933316, 28.664537463118, 28.9938135869667, 29.2229366928258, 29.759018512123, 
+           30.0386955739042, 30.6399653328095, 30.673119002865, 30.8966781620078, 30.9417076913918, 
+           31.3818275369516, 31.6511799337968, 31.9194382285677, 31.9204956710105, 32.0058600404978)
+data_2 <- data.frame(predictors, mae)
+
+# Combine datasets into a single dataframe with a new column indicating the source
+combined_data <- rbind(transform(data, Source = "Bottom 10"), 
+                       transform(data_2, Source = "Top 10"))
+
+# Create bar chart with different colors for each dataset
+ggplot(combined_data, aes(x = reorder(predictors, mae), y = mae, fill = Source)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Mean Absolute Error of the Best Predictors for the Highest and Lowest Counties Based on Cancer Instance Rate",
+       x = "Predictors",
+       y = "MAE") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.title = element_text(hjust = 0.5)) +
+  scale_fill_manual(values = c("#a7bed3", "#ffa652"), 
+                    labels = c("Top 10 Counties", "Bottom 10 Counties"))
+```
+
+The observed discrepancy in MAE values between the two groups emphasizes the superior predictive power of the identified variables for counties with higher cancer instance rates. This disparity highlights the relationships between environmental, socio-economic, and industrial factors in shaping regional variations in cancer burden. This exploration was particularly significant considering our initial findings from the first question, which indicated that the air domain might serve as the most reliable predictor. Interestingly, we observed a lack of representation from the water domain or built environment, while the sociodemographic and land domains exhibited notable presence. This distribution aligns with expectations, given that these domains collectively constituted two-thirds of the predictors. Notably, three variables overlapped between the top and bottom groups, implying that their predictive power may not be as robust as initially calculated. This observation prompts a reevaluation of their significance within our analyses.
+
+Furthermore, the presence of overlapping predictors between the top and bottom groups highlights the nuanced nature of these relationships, warranting further investigation into the underlying mechanisms driving regional disparities in cancer incidence rates. The presence of the variables `HCBD`, `Toluene`, and `Air_11DCE` in both the top and bottom groups is intriguing. While their inclusion suggests a potential role in predicting cancer instance rates, their consistent presence across groups raises questions about their effectiveness as exclusive predictors.
 
 # CONCLUSION
 
-In our exploration of the intricate relationship between environmental quality and cancer incidence rates, we set out with two pivotal questions in mind. Firstly, we sought to discern which specific subdomains within the Environmental Quality Index (EQI) dataset held a higher potential for predicting cancer incidence rates. Our systematic analysis unveiled that among the various EQI subdomains, air quality exhibited the most robust predictive power, as indicated by its lowest root mean square error (RMSE) compared to other subdomains. This finding suggests that focusing on air quality may offer valuable insights for policymakers and researchers aiming to develop targeted interventions aimed at reducing cancer instances, thereby optimizing resource allocation and maximizing impact.
+The goal of our analysis was to better understand the relationship between environmental quality and cancer instance rates in North Carolina. We also wanted to identify the best predictors for whether a county would have a high or low cancer incidence rate. We addressed our first question by calculating an overall EQI score for each environmental subdomain in our larger dataset (e.g., air, water) and using cross-validation to analyze the relationship between EQI subdomain scores and cancer instance rates. We found that the `air` subdomain had the highest propensity for predicting cancer instance rates in North Carolina. This is interesting, however, because one would assume that air quality would be worse in urban counties like Wake, Mecklenburg and Durham, and therefore there would be higher cancer instance rates in this area; yet the highest cancer instance rates were in Swain, Scotland and Martin, as aforementioned, all of which are more rural. We also hypothesized that We also expected that water EQI would be a strong predictor for higher cancer instance rates because of stories we’ve read about water pollution and pollution in the state’s rivers; however, water EQI surprisingly emerged as the weakest predictor among the five domains.
 
-Secondly, we delved into the realm of hazardous chemicals or variables within the EQI dataset to ascertain their influence on cancer incidence rates. Through rigorous analysis, we identified specific chemicals such as Cl4C2, Hexane, EtCl, Diesel, and VyCl, which demonstrated notable predictive capabilities with low RMSE values. These findings shed light not only on the predictive power of individual variables but also on societal perceptions of risk. Understanding the disproportionate influence of certain chemicals on cancer rates can inform regulatory priorities and public health campaigns, enabling stakeholders to tailor interventions to address the most pressing concerns effectively.
+Our second question addressed what the best individual predictors – from the entirety of the EQI dataset – for cancer instance rates in North Carolina were. We found that several of the best individual predictors fell under the `air` domain, which aligns with our previous findings. The relatively limited representation of the water and built environment domains was consistent with expectations, given their lower predictive power compared to sociodemographic and land domains. The overlap of three variables across counties with varying cancer incidence rates suggests a need for cautious interpretation of their predictive efficacy, as their presence in both high and low-incidence groups may indicate limited discriminatory power in our calculations.
 
-The implications of these conclusions are far-reaching and carry significant real-world relevance. By leveraging these insights, policymakers and public health officials can prioritize interventions and allocate resources more effectively. For instance, targeted efforts to improve air quality or regulate the use of hazardous chemicals could lead to tangible reductions in cancer rates, ultimately enhancing public health outcomes and quality of life. However, while our study provides valuable insights, there are opportunities for further exploration and refinement. Future research could delve deeper into the mechanisms underlying the observed associations and incorporate additional datasets or advanced statistical techniques to enhance predictive accuracy. By continuing to refine methodologies and explore emerging datasets, we can empower stakeholders with the knowledge and tools needed to make informed decisions and drive positive change in the fight against cancer.
+Future research could utilize additional modeling techniques and employ more comprehensive datasets to enhance the predictive accuracy of cancer incidence rate models. Utilizing advanced machine learning algorithms, such as random forests or gradient boosting, may offer improved performance and better capture the complex interactions between predictor variables. Additionally, it is important to note that our analysis – similar to other comparable analyses – did not account for all the nuances of cancer and cancer diagnoses, like genetic predisposition, diet or healthcare accessibility, and instead focused on one potential catalyst for higher cancer instance rates.
 
-
+Overall, our analysis offers a way for county governments to address various factors that may influence local cancer instance rates. County governments can use these insights to shape public health initiatives — which is particularly important given North Carolina’s decentralized public health infrastructure. By offering actionable insights, we inform resource allocation, help shape public health initiatives, and put forth a solid first step for addressing the burgeoning impact of cancer in North Carolina and beyond. 
