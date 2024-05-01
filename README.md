@@ -1,5 +1,7 @@
 # NC-Cancer-Instances
 
+For STOR 320: Introduction to Data Science. 
+
 Cancer instance data from [NC State Center for Health Statistics](https://schs.dph.ncdhhs.gov/data/cancer.cfm). 
 
 In February, the World Health Organization published a sobering forecast: “Over 35 million new cancer cases are predicted in 2050, a 77% increase from the estimated 20 million in 2022.” The WHO’s estimate comes amidst a flurry of news reports about an increase in the number of young people diagnosed with cancer. In March, The New York Times reported that “millennials born around 1990 now have twice the risk of colon cancer compared with people born around the 1950s, while millennials’ risk for rectal cancer is about four times higher than that of older age groups, according to a study published in the Journal of the National Cancer Institute.”
